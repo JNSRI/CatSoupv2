@@ -3,11 +3,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define ROOM_WIDTH 8
+#define ROOM_WIDTH 12
 #define HME_POS 1
 #define BWL_POS (ROOM_WIDTH - 2)
-#define SCR_POS 3
-#define TOW_POS 4
 
 int main() {
 	int soupCount = 0;
@@ -23,6 +21,8 @@ int main() {
 	int toyLaser = 0;
 	int beforeMood = mood;
 	int beforeRel = relationship;
+	int SCR_POS = -1;
+	int TOW_POS = -1;
 
 	srand((unsigned int)time(NULL));
 
@@ -150,6 +150,8 @@ int main() {
 		for (int i = 1; i < ROOM_WIDTH - 1; i++) {
 			if (i == HME_POS) printf("H");
 			else if (i == BWL_POS) printf("B");
+			else if (i == SCR_POS && Scratch == 1) printf("S");  
+			else if (i == TOW_POS && Tower == 1) printf("T");    
 			else printf(" ");
 		}
 		printf("#\n");
@@ -253,6 +255,102 @@ int main() {
 					printf("집사와의 관계가 깊어집니다.\n");
 				}
 			}
+		}
+
+		int produce = 0;
+		if (mood > 0) {
+			produce = (mood - 1) + relationship;
+		}
+		else {
+			produce = relationship;
+		}
+		cp = cp + produce;
+
+		printf("쫀떡의 기분과 친밀도에 따라서 CP가 %d 포인트 생산되었습니다.\n", produce);
+		printf("보유 CP: %d 포인트\n", cp);
+
+		int shopChoice;
+		while (1) {
+			printf("\n상점에서 물건을 살 수 있습니다.\n");
+			printf("어떤 물건을 구매할까요?\n");
+			printf("  0. 아무 것도 사지 않는다.\n");
+
+			printf("  1. 장난감 쥐: 1 CP");
+			if (toyMouse == 1) printf(" (품절)");
+			printf("\n");
+
+			printf("  2. 레이저 포인터: 2 CP");
+			if (toyLaser == 1) printf(" (품절)");
+			printf("\n");
+
+			printf("  3. 스크래처: 4 CP");
+			if (Scratch == 1) printf(" (품절)");
+			printf("\n");
+
+			printf("  4. 캣 타워: 6 CP");
+			if (Tower == 1) printf(" (품절)");
+			printf("\n");
+
+			printf(">> ");
+			scanf_s("%d", &shopChoice);
+
+			if (shopChoice < 0 || shopChoice > 4) continue;
+
+			if (shopChoice == 0) break;
+
+			if ((shopChoice == 1 && toyMouse == 1) ||
+				(shopChoice == 2 && toyLaser == 1) ||
+				(shopChoice == 3 && Scratch == 1) ||
+				(shopChoice == 4 && Tower == 1)) {
+				printf("이미 구매한 물건입니다.\n");
+				continue;
+			}
+
+			int cost = 0;
+			if (shopChoice == 1) cost = 1;
+			if (shopChoice == 2) cost = 2;
+			if (shopChoice == 3) cost = 4;
+			if (shopChoice == 4) cost = 6;
+
+			if (cp < cost) {
+				printf("CP가 부족합니다.\n");
+				continue;
+			}
+
+			cp = cp - cost;
+
+			if (shopChoice == 1) {
+				toyMouse = 1;
+				printf("장난감 쥐를 구매했습니다.\n");
+			}
+			else if (shopChoice == 2) {
+				toyLaser = 1;
+				printf("레이저 포인터를 구매했습니다.\n");
+			}
+			else if (shopChoice == 3) {
+				Scratch = 1;
+				printf("스크래처를 구매했습니다.\n");
+				while (1) {
+					int pos = rand() % (ROOM_WIDTH - 2) + 1;
+					if (pos != HME_POS && pos != BWL_POS && pos != TOW_POS && pos != catPos) {
+						SCR_POS = pos;
+						break;
+					}
+				}
+			}
+			else if (shopChoice == 4) {
+				Tower = 1;
+				printf("캣타워를 구매했습니다.\n");
+				while (1) {
+					int pos = rand() % (ROOM_WIDTH - 2) + 1;
+					if (pos != HME_POS && pos != BWL_POS && pos != SCR_POS && pos != catPos) {
+						TOW_POS = pos;
+						break;
+					}
+				}
+			}
+
+			break;
 		}
 
 
