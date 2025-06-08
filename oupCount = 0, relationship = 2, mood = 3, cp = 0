@@ -1,0 +1,29 @@
+[33mcommit ff8678b1b5a9294a0eae7c7778108e5e23a53a78[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: 창희 김 <20252204@m365.hnu.ac.kr>
+Date:   Sun Jun 8 20:13:53 2025 +0900
+
+    2-4 행동
+
+[33mcommit a066571b21c9d866ed099c24bea2866a60234375[m
+Author: 창희 김 <20252204@m365.hnu.ac.kr>
+Date:   Sun Jun 8 19:37:29 2025 +0900
+
+    2-3 이동
+
+[33mcommit 83dea6612e3bc2a724dafd44ce9c2b9514c7e6af[m
+Author: 창희 김 <20252204@m365.hnu.ac.kr>
+Date:   Sun Jun 8 18:22:38 2025 +0900
+
+    2-2 기분 나빠짐
+
+[33mcommit 4d7fc525cd9611c877df23d8cdc1ff34d872673c[m
+Author: SURI <SURI@JUNGSURI>
+Date:   Sun Jun 8 17:40:08 2025 +0900
+
+    초기 커밋.
+
+[33mcommit c58f85a5f5d8dc747a51728995492d1c2650a891[m
+Author: SURI <SURI@JUNGSURI>
+Date:   Sun Jun 8 17:40:06 2025 +0900
+
+    .gitattributes 및 .gitignore을(를) 추가합니다.
