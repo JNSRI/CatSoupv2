@@ -13,6 +13,10 @@ int main() {
 	int prevCatPos = 1;
 	int catPos = 2;
 	int input, dice;
+	int cp = 0;
+	int mood = 3;
+	int Scratch = 0;
+	int Tower = 0;
 
 	srand(time(NULL));
 
@@ -30,50 +34,108 @@ int main() {
 
 		printf("==================== 현재 상태 ===================\n");
 		printf("현재까지 만든 수프: %d개\n", soupCount);
+		printf("CP: %d 포인트\n", cp);
+		printf("쫀떡이 기분(0~3): %d\n", mood);
+		if (mood == 0) printf("  기분이 매우 나쁩니다.\n");
+		else if (mood == 1) printf("  심심해합니다.\n");
+		else if (mood == 2) printf("  식빵을 굽습니다.\n");
+		else if (mood == 3) printf("  골골송을 부릅니다.\n");
 		printf("집사와의 관계(0~4): %d\n", relationship);
-		if (relationship == 0) printf("곁에 오는 것조차 싫어합니다.\n");
-		else if (relationship == 1) printf("간식 자판기 취급입니다.\n");
-		else if (relationship == 2) printf("그럭저럭 쓸 만한 집사입니다.\n");
-		else if (relationship == 3) printf("훌륭한 집사로 인정 받고 있습니다.\n");
-		else if (relationship == 4) printf("집사 껌딱지입니다.\n");
+		if (relationship == 0) printf("  곁에 오는 것조차 싫어합니다.\n");
+		else if (relationship == 1) printf("  간식 자판기 취급입니다.\n");
+		else if (relationship == 2) printf("  그럭저럭 쓸만한 집사입니다.\n");
+		else if (relationship == 3) printf("  훌륭한 집사로 인정받고 있습니다.\n");
+		else if (relationship == 4) printf("  집사 껌딱지입니다.\n");
 		printf("==================================================\n");
 
-		printf("쫀떡 이동: 집사와 친밀할수록 냄비 쪽으로 갈 확률이 높아집니다.\n");
 		int target = 6 - relationship;
-		printf("주사위 눈이 %d 이상이면 냄비 쪽으로 이동합니다.\n", target);
+		printf("\n6-2: 주사위 눈이 %d이하면 그냥 기분이 나빠집니다.\n", target);
 		printf("주사위를 굴립니다. 또르륵...\n");
 		Sleep(1000);
 
 		dice = rand() % 6 + 1;
-		printf("%d이(가) 나왔습니다!\n", dice);
+		printf("%d이(가) 나왔습니다.\n", dice);
 		Sleep(500);
 
-		prevCatPos = catPos;
-		if (dice >= target) {
-			if (catPos < ROOM_WIDTH - 2) {
-				catPos++;
-				printf("냄비 쪽으로 움직입니다.\n");
-			}
-		}
-		else {
-			if (catPos > 1) {
-				catPos--;
-				printf("집 쪽으로 움직입니다.\n");
+		if (dice <= target) {
+			if (mood > 0) {
+				printf("쫀떡이의 기분이 나빠집니다: %d -> %d\n", mood, mood - 1);
+				mood--;
 			}
 		}
 
-		if (catPos == HME_POS) {
-			printf("쫀떡은(는) 자신의 집에서 편안함을 느낍니다.\n\n");
+		prevCatPos = catPos;
+
+		if (mood == 0) {
+			if (catPos > HME_POS) {
+				catPos = catPos - 1;
+				printf("기분이 매우 나쁜 쫀떡은 집으로 향합니다.\n");
+			}
+		}
+		else if (mood == 1) {
+			if (Scratch == 1 || Tower == 1) {
+				int distScr = ROOM_WIDTH;
+				int distTow = ROOM_WIDTH;
+
+				if (Scratch == 1) {
+					if (SCR_POS > catPos) distScr = SCR_POS - catPos;
+					else distScr = catPos - SCR_POS;
+				}
+				if (Tower == 1) {
+					if (TOW_POS > catPos) distTow = TOW_POS - catPos;
+					else distTow = catPos - TOW_POS;
+				}
+
+				int target;
+				if (distScr <= distTow) target = SCR_POS;
+				else target = TOW_POS;
+
+				if (catPos < target) catPos = catPos + 1;
+				else if (catPos > target) catPos = catPos - 1;
+
+				if (target == SCR_POS) printf("쫀떡은 심심해서 스크래처 쪽으로 이동합니다.\n");
+				else printf("쫀떡은 심심해서 캣타워 쪽으로 이동합니다.\n");
+			}
+			else {
+				mood = mood - 1;
+				printf("놀 거리가 없어서 기분이 매우 나빠집니다.\n");
+			}
+		}
+		else if (mood == 2) {
+			printf("쫀떡은 기분좋게 식빵을 굽고 있습니다.\n");
+		}
+		else if (mood == 3) {
+			if (catPos < BWL_POS) {
+				catPos = catPos + 1;
+				printf("쫀떡은 골골송을 부르며 수프를 만들러 갑니다.\n");
+			}
+		}
+
+		if (catPos == HME_POS && prevCatPos == HME_POS) {
+			if (mood < 3) {
+				mood = mood + 1;
+				printf("쫀떡은 집에서 휴식을 취하며 기분이 좋아졌습니다.\n");
+			}
 		}
 		else if (catPos == BWL_POS) {
 			int soupType = rand() % 3;
-			printf("쫀떡이(가) ");
+			printf("쫀떡이 ");
 			if (soupType == 0) printf("감자 수프를 만들었습니다!\n");
 			else if (soupType == 1) printf("양송이 수프를 만들었습니다!\n");
 			else printf("브로콜리 수프를 만들었습니다!\n");
-			soupCount++;
-			printf("현재까지 만든 수프: %d개\n\n", soupCount);
+			soupCount = soupCount + 1;
+			printf("현재까지 만든 수프: %d개\n", soupCount);
 		}
+		else if (catPos == SCR_POS && Scratch == 1) {
+			if (mood < 3) mood = mood + 1;
+			printf("쫀떡은 스크래처를 긁고 놀았습니다.\n");
+		}
+		else if (catPos == TOW_POS && Tower == 1) {
+			if (mood <= 1) mood = mood + 2;
+			else mood = 3;
+			printf("쫀떡은 캣타워를 뛰어다닙니다.\n");
+		}
+
 
 		for (int i = 0; i < ROOM_WIDTH; i++) printf("#");
 		printf("\n");
@@ -93,6 +155,13 @@ int main() {
 			else printf(" ");
 		}
 		printf("#\n");
+
+		for (int i = 0; i < ROOM_WIDTH; i++) printf("#");
+		printf("\n");
+
+
+		for (int i = 0; i < ROOM_WIDTH; i++) printf("#");
+		printf("\n");
 
 		for (int i = 0; i < ROOM_WIDTH; i++) printf("#");
 		printf("\n");
