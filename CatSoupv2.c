@@ -123,21 +123,21 @@ int main() {
 				printf("쫀떡은 집에서 휴식을 취하며 기분이 좋아졌습니다.\n");
 			}
 		}
-		else if (catPos == BWL_POS) {
+		else if (catPos == BWL_POS && prevCatPos == BWL_POS) {
 			int soupType = rand() % 3;
 			printf("쫀떡이 ");
 			if (soupType == 0) printf("감자 수프를 만들었습니다!\n");
 			else if (soupType == 1) printf("양송이 수프를 만들었습니다!\n");
 			else printf("브로콜리 수프를 만들었습니다!\n");
-			soupCount = soupCount + 1;
+			soupCount++;
 			printf("현재까지 만든 수프: %d개\n", soupCount);
 		}
-		else if (catPos == SCR_POS && Scratch == 1) {
-			if (mood < 3) mood = mood + 1;
+		else if (Scratch == 1 && SCR_POS != -1 && catPos == SCR_POS && prevCatPos == SCR_POS) {
+			if (mood < 3) mood++;
 			printf("쫀떡은 스크래처를 긁고 놀았습니다.\n");
 		}
-		else if (catPos == TOW_POS && Tower == 1) {
-			if (mood <= 1) mood = mood + 2;
+		else if (Tower == 1 && TOW_POS != -1 && catPos == TOW_POS && prevCatPos == TOW_POS) {
+			if (mood <= 1) mood += 2;
 			else mood = 3;
 			printf("쫀떡은 캣타워를 뛰어다닙니다.\n");
 		}
@@ -150,8 +150,8 @@ int main() {
 		for (int i = 1; i < ROOM_WIDTH - 1; i++) {
 			if (i == HME_POS) printf("H");
 			else if (i == BWL_POS) printf("B");
-			else if (i == SCR_POS && Scratch == 1) printf("S");  
-			else if (i == TOW_POS && Tower == 1) printf("T");    
+			else if (Scratch == 1 && SCR_POS != -1 && i == SCR_POS) printf("S");
+			else if (Tower == 1 && TOW_POS != -1 && i == TOW_POS) printf("T");
 			else printf(" ");
 		}
 		printf("#\n");
@@ -163,13 +163,6 @@ int main() {
 			else printf(" ");
 		}
 		printf("#\n");
-
-		for (int i = 0; i < ROOM_WIDTH; i++) printf("#");
-		printf("\n");
-
-
-		for (int i = 0; i < ROOM_WIDTH; i++) printf("#");
-		printf("\n");
 
 		for (int i = 0; i < ROOM_WIDTH; i++) printf("#");
 		printf("\n");
