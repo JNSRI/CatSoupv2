@@ -6,6 +6,8 @@
 #define ROOM_WIDTH 8
 #define HME_POS 1
 #define BWL_POS (ROOM_WIDTH - 2)
+#define SCR_POS 3
+#define TOW_POS 4
 
 int main() {
 	int soupCount = 0;
@@ -17,8 +19,12 @@ int main() {
 	int mood = 3;
 	int Scratch = 0;
 	int Tower = 0;
+	int toyMouse = 0;
+	int toyLaser = 0;
+	int beforeMood = mood;
+	int beforeRel = relationship;
 
-	srand(time(NULL));
+	srand((unsigned int)time(NULL));
 
 	printf("**** 야옹이와 수프 ****\n\n");
 	printf(" /\\_/\\   \n");
@@ -166,62 +172,89 @@ int main() {
 		for (int i = 0; i < ROOM_WIDTH; i++) printf("#");
 		printf("\n");
 
-		printf("\n어떤 상호작용을 하시겠습니까?  0. 아무것도 하지 않음 1. 긁어 주기\n>> ");
+		int optionCount = 2;
+		printf("\n어떤 상호작용을 하시겠습니까?\n");
+		printf("0. 아무것도 하지 않음\n");
+		printf("1. 긁어 주기\n");
 
-		while (1) {
-			scanf_s("%d", &input);
-			if (input == 0 || input == 1) break;
-			else printf(">> ");
+		if (toyMouse == 1 && toyLaser == 1) {
+			printf("2. 장난감 쥐로 놀아 주기\n");
+			printf("3. 레이저 포인터로 놀아 주기\n");
+			optionCount = 4;
+		}
+		else if (toyMouse == 1) {
+			printf("2. 장난감 쥐로 놀아 주기\n");
+			optionCount = 3;
+		}
+		else if (toyLaser == 1) {
+			printf("2. 레이저 포인터로 놀아 주기\n");
+			optionCount = 3;
 		}
 
-		if (input == 0) {
-			printf("아무것도 하지 않습니다.\n");
-			Sleep(500);
-			printf("4/6의 확률로 친밀도가 떨어집니다.\n");
-			Sleep(500);
-			printf("주사위를 굴립니다. 또르륵...\n");
-			Sleep(1000);
-			dice = rand() % 6 + 1;
-			printf("%d이(가) 나왔습니다!\n", dice);
-			Sleep(500);
+		beforeMood = mood;
+		beforeRel = relationship;
 
-			if (dice <= 4) {
-				if (relationship > 0) {
-					relationship--;
-					printf("친밀도가 떨어집니다.\n");
-				}
-				else {
-					printf("이미 친밀도가 0이라 더 이상 떨어지지 않습니다.\n");
-				}
+		while (1) {
+			printf(">> ");
+			scanf_s("%d", &input);
+			if (input >= 0 && input < optionCount) break;
+		}
+
+		dice = rand() % 6 + 1;
+
+		if (input == 0) {
+			if (mood > 0) {
+				mood = mood - 1;
+				printf("쫀떡의 기분이 나빠졌습니다: %d -> %d\n", beforeMood, mood);
 			}
-			else {
-				printf("다행히 친밀도가 떨어지지 않았습니다.\n");
+
+			if (dice <= 5) {
+				if (relationship > 0) {
+					relationship = relationship - 1;
+					printf("집사와의 관계가 나빠집니다.\n");
+				}
 			}
 		}
 		else if (input == 1) {
-			printf("쫀떡의 턱을 긁어주었습니다.\n");
-			Sleep(500);
-			printf("2/6 확률로 친밀도가 높아집니다.\n");
-			Sleep(500);
-			printf("주사위를 굴립니다. 또르륵...\n");
-			Sleep(1000);
-			dice = rand() % 6 + 1;
-			printf("%d이(가) 나왔습니다!\n", dice);
-			Sleep(500);
+			printf("쫀떡의 기분은 그대로 입니다: %d\n", mood);
 
 			if (dice >= 5) {
 				if (relationship < 4) {
-					relationship++;
-					printf("친밀도가 높아집니다.\n");
+					relationship = relationship + 1;
+					printf("집사와의 관계가 깊어집니다.\n");
 				}
-				else {
-					printf("이미 친밀도가 최고치입니다.\n");
-				}
-			}
-			else {
-				printf("친밀도는 그대로입니다.\n");
 			}
 		}
+		else if (input == 2) {
+			if (mood < 3) {
+				mood = mood + 1;
+			}
+			printf("장난감 쥐로 놀아주었습니다. 쫀떡의 기분이 조금 좋아졌습니다: %d -> %d\n", beforeMood, mood);
+
+			if (dice >= 4) {
+				if (relationship < 4) {
+					relationship = relationship + 1;
+					printf("집사와의 관계가 깊어집니다.\n");
+				}
+			}
+		}
+		else if (input == 3) {
+			if (mood <= 1) {
+				mood = mood + 2;
+			}
+			else {
+				mood = 3;
+			}
+			printf("레이저 포인터로 신나게 놀아 주었습니다. 쫀떡의 기분이 꽤 좋아졌습니다: %d -> %d\n", beforeMood, mood);
+
+			if (dice >= 2) {
+				if (relationship < 4) {
+					relationship = relationship + 1;
+					printf("집사와의 관계가 깊어집니다.\n");
+				}
+			}
+		}
+
 
 		printf("현재 친밀도: %d\n", relationship);
 	}
