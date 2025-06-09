@@ -23,6 +23,8 @@ int main() {
 	int beforeRel = relationship;
 	int SCR_POS = -1;
 	int TOW_POS = -1;
+	int turnCount = 1;
+	int questDone = 0;
 
 	srand((unsigned int)time(NULL));
 
@@ -35,6 +37,38 @@ int main() {
 	system("cls");
 
 	while (1) {
+		if (turnCount == 4 && questDone == 0) {
+			int choice;
+			beforeMood = mood;
+
+			printf("\n[돌발 퀘스트] 고양이 운세 돌리기!\n");
+			printf("쫀떡이의 운세를 확인하려면 1을 입력하세요: ");
+
+			while (1) {
+				scanf_s("%d", &choice);
+				if (choice == 1) break;
+			}
+
+			int fortune = rand() % 3;
+
+			if (fortune == 0) {
+				if (mood > 0) mood--;
+				printf("흉입니다... 기분이 나빠졌습니다: %d -> %d\n", beforeMood, mood);
+			}
+			else if (fortune == 1) {
+				printf("보통입니다. 기분은 그대로입니다: %d\n", mood);
+			}
+			else {
+				if (mood < 3) mood++;
+				printf("대길입니다! 기분이 좋아졌습니다: %d -> %d\n", beforeMood, mood);
+			}
+
+			questDone = 1;
+
+			continue;
+		}
+
+
 		Sleep(2500);
 		system("cls");
 
@@ -348,6 +382,9 @@ int main() {
 
 
 		printf("현재 친밀도: %d\n", relationship);
+
+		turnCount++;
+
 	}
 
 	return 0;
